@@ -22,37 +22,58 @@ from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler,MinMaxScaler
 import time
 
-df = load_breast_cancer()
-X = df.data
-y = df.target
+df = load_breast_cancer() #Load breast cancer data from sklearn
+X = df.data                 # features
+y = df.target               # target
 
-X.shape
+X.shape                     # (569, 30)
 
-y.shape
+y.shape                     # (569,)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)      # split data to train and test
 
-model=LogisticRegression(max_iter=90, verbose=1)
+model=LogisticRegression(max_iter=90, verbose=1)                # Use logistic regression model because data is discrete 
+                                                                # maximum number of iterations for the solver to converge is 90
 model.fit(X_train, y_train)
 
 target_predict = model.predict(X_test)
 model_score= model.score(X_test, y_test)
-model_score
+model_score                # 0.9707602339181286
+
 
 print(metrics.classification_report(y_test, target_predict))
 
+                            #     precision    recall  f1-score   support
+                            
+                            #          0       0.98      0.94      0.96        63
+                            #          1       0.96      0.99      0.98       108
+                            
+                            #    accuracy                           0.97       171
+                            #   macro avg       0.97      0.96      0.97       171
+                            #weighted avg       0.97      0.97      0.97       171
+                            
+
 start_rbf=time.time()
 
-svm_rbf = SVC(kernel="rbf")
+svm_rbf = SVC(kernel="rbf")   # try another model Support Vector Classifier (SVC) with the Radial Basis Function (RBF) kernel
 
 svm_rbf.fit(X_train, y_train)
 
 target_predict_rbf = svm_rbf.predict(X_test)
 model_score_rbf= svm_rbf.score(X_test, y_test)
-model_score_rbf
+model_score_rbf               # 0.935672514619883
 
 r_rbf=metrics.classification_report(y_test, target_predict_rbf,output_dict=True)
 print(metrics.classification_report(y_test, target_predict_rbf ))
+                                #               precision    recall  f1-score   support
+                                
+                                 #          0       1.00      0.83      0.90        63
+                                 #          1       0.91      1.00      0.95       108
+                                
+                                 #   accuracy                           0.94       171
+                                 #  macro avg       0.95      0.91      0.93       171
+                                # weighted avg       0.94      0.94      0.93       171
+
 
 end_rbf= time.time()
 
@@ -61,13 +82,14 @@ Time_taken_rbf
 
 start_poly= time.time()
 
-svm_poly = SVC(kernel="poly")
+svm_poly = SVC(kernel="poly")        # try another model Support Vector Classifier (SVC) with the polynomial kernel ('poly')
 
 svm_poly.fit(X_train, y_train)
 
 target_predict_poly = svm_poly.predict(X_test)
 model_score_poly= svm_poly.score(X_test, y_test)
-model_score_poly
+model_score_poly                     # 0.9415204678362573
+
 
 r_poly=metrics.classification_report(y_test, target_predict_poly,output_dict=True)
 
@@ -125,3 +147,11 @@ Result = {'Kernal': ['rbf', 'poly', 'linear', 'sigmoid'],
 # Create DataFrame
 df_result = pd.DataFrame(Result)
 df_result
+
+
+#	Kernal	Accuracy	Precision	Recall	F1_score	Time_taken
+# 0	 rbf	0.935673	0.907563	1.000000	0.951542	0.115654
+# 1	 poly	0.941520	0.922414	0.990741	0.955357	0.107156
+# 2	linear	0.964912	0.963636	0.981481	0.972477	1.398122
+# 3	sigmoid	0.467836	0.566929	0.666667	0.612766	0.103167
+# 4	logistic0.970760	0.963964	0.990741	0.977169	0.145646
